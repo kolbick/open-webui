@@ -83,12 +83,17 @@ Kolb-Bot needs an AI model to talk to. Think of models like different "brains" �
 
 | Model | Size | Good for |
 |-------|------|----------|
-| `gemma3:4b` | ~3 GB | Fast everyday chat |
-| `llama3.2:3b` | ~2 GB | Fast, great for most tasks |
-| `qwen2.5:7b` | ~5 GB | Strong reasoning |
-| `mistral:7b` | ~4 GB | Balanced speed and quality |
+| `gemma4:4b` | ~3 GB | Fast everyday chat, great all-rounder |
+| `llama3.2:3b` | ~2 GB | Super lightweight, good for older PCs |
+| `deepseek-r1:7b` | ~5 GB | Step-by-step reasoning and problem solving |
+| `qwen3:8b` | ~5 GB | Multilingual, strong at coding and long documents |
+| `mistral:7b` | ~4 GB | Reliable general-purpose, good at following instructions |
+| `llama3.1:8b` | ~5 GB | Well-rounded, great for tools and agents |
+| `phi3:3.8b` | ~2 GB | Microsoft's compact model, punches above its size |
 
 > The bigger the model, the smarter (and slower) it tends to be. Start with a smaller one and work your way up.
+>
+> Already have a powerful GPU (8GB+ VRAM)? Try the larger versions — `qwen3:14b`, `deepseek-r1:14b`, or `llama3.1:70b` for noticeably better results.
 
 ---
 
@@ -107,6 +112,36 @@ Find your Tailscale IP in the Tailscale app, then open:
 ```
 http://your-tailscale-ip:3000
 ```
+
+---
+
+## Using MiniMax (Token Plan) with Kolb-Bot
+
+MiniMax is a cloud AI provider with a Token Plan subscription that gives you access to their powerful **M2.7** model. Because MiniMax uses an OpenAI-compatible API, Kolb-Bot connects to it out of the box — no extra setup or code required.
+
+This is useful if your local PC models aren't powerful enough for a task, or if you want access to a cloud model alongside your local ones.
+
+### What you'll need
+
+- A MiniMax account with an active Token Plan at [platform.minimax.io](https://platform.minimax.io)
+- Your **Token Plan API key** (found in your account dashboard — note: this is different from a pay-as-you-go key)
+
+### How to connect it
+
+1. Open Kolb-Bot and click your **profile icon** in the top-right corner
+2. Go to **Settings → Connections**
+3. Under the **OpenAI** section, click **+** to add a new connection
+4. Fill in the fields:
+   - **URL**: `https://api.minimax.io/v1`
+   - **API Key**: paste your MiniMax Token Plan key here
+5. Click **Save** — Kolb-Bot will verify the connection
+6. The MiniMax model (`MiniMax-M2.7`) will now appear in your model selector alongside your local models
+
+### Switching between local and MiniMax
+
+Once connected, you can pick any model from the dropdown at the top of a new chat. Local models (like `gemma4` or `qwen3`) run entirely on your PC. MiniMax models send your message to MiniMax's servers and return a response — so an internet connection is required and your messages are processed by MiniMax according to their privacy policy.
+
+> **Token Plan note:** Your MiniMax Token Plan key only works while your subscription is active. Quotas reset on a rolling 5-hour window. If you hit your limit, you'll need to wait for the reset or switch to a local model in the meantime.
 
 ---
 
