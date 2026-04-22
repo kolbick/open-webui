@@ -1,11 +1,11 @@
 {
   "name": "Kolb-Bot",
   "short_name": "Kolb-Bot",
-  "description": "Kolb-Bot - AI Chat Interface",
+  "description": "Kolb-Bot - Pirate Cyborg AI Assistant",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#343541",
-  "theme_color": "#171717",
+  "background_color": "#1a062c",
+  "theme_color": "#2b0a46",
   "icons": [
     {
       "src": "/icon-192.png",

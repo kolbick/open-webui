@@ -2,19 +2,19 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/png" href="/static/favicon.png" crossorigin="use-credentials" />
+		<link rel="icon" type="image/png" href="/favicon.png" crossorigin="use-credentials" />
 		<link
 			rel="icon"
 			type="image/png"
-			href="/static/favicon-96x96.png"
+			href="/favicon-96x96.png"
 			sizes="96x96"
 			crossorigin="use-credentials"
 		/>
-		<link rel="shortcut icon" href="/static/favicon.ico" crossorigin="use-credentials" />
+		<link rel="shortcut icon" href="/favicon.ico" crossorigin="use-credentials" />
 		<link
 			rel="apple-touch-icon"
 			sizes="180x180"
-			href="/static/apple-touch-icon.png"
+			href="/apple-touch-icon.png"
 			crossorigin="use-credentials"
 		/>
 		<link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
@@ -22,7 +22,7 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
 		/>
-		<meta name="theme-color" content="#171717" />
+		<meta name="theme-color" content="#2b0a47" />
 		<meta name="robots" content="noindex,nofollow" />
 
 		<script src="/static/loader.js" defer crossorigin="use-credentials"></script>
@@ -46,7 +46,7 @@
 
 				if (localStorage.theme === 'system') {
 					document.documentElement.classList.add(prefersDarkTheme ? 'dark' : 'light');
-					metaThemeColorTag.setAttribute('content', prefersDarkTheme ? '#171717' : '#ffffff');
+					metaThemeColorTag.setAttribute('content', prefersDarkTheme ? '#2b0a47' : '#3b0764');
 				} else if (localStorage.theme === 'oled-dark') {
 					document.documentElement.style.setProperty('--color-gray-800', '#101010');
 					document.documentElement.style.setProperty('--color-gray-850', '#050505');
@@ -62,7 +62,7 @@
 					metaThemeColorTag.setAttribute('content', '#983724');
 				} else {
 					document.documentElement.classList.add('dark');
-					metaThemeColorTag.setAttribute('content', '#171717');
+					metaThemeColorTag.setAttribute('content', '#2b0a47');
 				}
 
 				window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
@@ -70,7 +70,7 @@
 						if (e.matches) {
 							document.documentElement.classList.add('dark');
 							document.documentElement.classList.remove('light');
-							metaThemeColorTag.setAttribute('content', '#171717');
+							metaThemeColorTag.setAttribute('content', '#2b0a47');
 						} else {
 							document.documentElement.classList.add('light');
 							document.documentElement.classList.remove('dark');
@@ -83,8 +83,8 @@
 				const logo = document.createElement('img');
 				logo.id = 'logo';
 				logo.style =
-					'position: absolute; width: auto; height: 6rem; top: 44%; left: 50%; transform: translateX(-50%); display:block;';
-				logo.src = isDarkMode ? '/static/splash-dark.png' : '/static/splash.png';
+					'position: absolute; width: auto; height: 8rem; top: 40%; left: 50%; transform: translateX(-50%); display:block; border-radius: 1.25rem; box-shadow: 0 24px 56px rgba(0, 0, 0, 0.45);';
+				logo.src = '/logo-512.png';
 
 				document.addEventListener('DOMContentLoaded', function () {
 					const splash = document.getElementById('splash-screen');
@@ -131,8 +131,8 @@
 			>
 				<img
 					id="logo-her"
-					style="width: auto; height: 13rem"
-					src="/static/splash.png"
+					style="width: auto; height: 14rem; border-radius: 2rem"
+					src="/logo-512.png"
 					class="animate-pulse-fast"
 				/>
 
@@ -176,15 +176,15 @@
 		}
 
 		#splash-screen {
-			background: #fff;
+			background: linear-gradient(150deg, #1f0231 0%, #2b0a47 48%, #18012a 100%);
 		}
 
 		html.dark #splash-screen {
-			background: #000;
+			background: linear-gradient(150deg, #140020 0%, #23043e 50%, #120018 100%);
 		}
 
 		html.her #splash-screen {
-			background: #983724;
+			background: linear-gradient(140deg, #3b0764, #4c1d95);
 		}
 
 		#logo-her {
