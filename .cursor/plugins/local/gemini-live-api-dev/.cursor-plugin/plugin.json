@@ -1,0 +1,16 @@
+{
+  "name": "gemini-live-api-dev",
+  "version": "0.1.0",
+  "description": "Cursor skill for building with the Gemini Live API — low-latency real-time voice, video, and text over WebSockets.",
+  "author": "kolbick",
+  "license": "MIT",
+  "keywords": [
+    "gemini",
+    "live-api",
+    "websockets",
+    "realtime",
+    "voice",
+    "video",
+    "ai"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "figma-generate-design",
+  "version": "0.1.0",
+  "description": "Cursor skill for building or updating full-page Figma screens from an application's published design system (components, variables, styles) via the Figma MCP.",
+  "author": "kolbick",
+  "license": "MIT",
+  "keywords": [
+    "figma",
+    "design-system",
+    "mcp",
+    "code-to-design",
+    "figma-use"
+  ]
+}
