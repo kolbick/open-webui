@@ -68,20 +68,20 @@
 					<Marquee
 						duration={5000}
 						words={[
-							$i18n.t('Explore the cosmos'),
-							$i18n.t('Unlock mysteries'),
-							$i18n.t('Chart new frontiers'),
-							$i18n.t('Dive into knowledge'),
-							$i18n.t('Discover wonders'),
-							$i18n.t('Ignite curiosity'),
-							$i18n.t('Forge new paths'),
-							$i18n.t('Unravel secrets'),
-							$i18n.t('Pioneer insights'),
-							$i18n.t('Embark on adventures')
+							$i18n.t('Your AI, your rules'),
+							$i18n.t('Private by design'),
+							$i18n.t('No subscriptions'),
+							$i18n.t('Runs on your machine'),
+							$i18n.t('Always available'),
+							$i18n.t('Fully offline'),
+							$i18n.t('Your data stays yours'),
+							$i18n.t('No cloud required'),
+							$i18n.t('Built for you'),
+							$i18n.t('Powered by Kolb-Bot')
 						]}
 					/>
 
-					<div class="mt-0.5">{$i18n.t(`wherever you are`)}</div>
+					<div class="mt-0.5">{$i18n.t(`on your terms`)}</div>
 				</div>
 
 				<div class="flex justify-center mt-8">
