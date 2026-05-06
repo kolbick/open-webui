@@ -1,6 +1,6 @@
 [project]
-name = "kolb-bot"
-description = "Kolb-Bot"
+name = "tide-bot"
+description = "Tide-Bot"
 authors = [
     { name = "Timothy Jaeryang Baek", email = "tim@openwebui.com" }
 ]

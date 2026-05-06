@@ -123,7 +123,7 @@
 	};
 
 	const shareHandler = async () => {
-		toast.success($i18n.t('Redirecting you to Kolb-Bot Community'));
+		toast.success($i18n.t('Redirecting you to Tide-Bot Community'));
 
 		// remove snapshot from feedbacks
 		const feedbacksToShare = feedbacks.map((f) => {

@@ -39,7 +39,7 @@
 		const _chat = chat.chat;
 		console.log('share', _chat);
 
-		toast.success($i18n.t('Redirecting you to Kolb-Bot Community'));
+		toast.success($i18n.t('Redirecting you to Tide-Bot Community'));
 		const url = 'https://openwebui.com';
 		// const url = 'http://localhost:5173';
 
@@ -168,7 +168,7 @@
 								shareChat();
 							}}
 						>
-							{$i18n.t('Share to Kolb-Bot Community')}
+							{$i18n.t('Share to Tide-Bot Community')}
 						</button>
 					{/if}
 
