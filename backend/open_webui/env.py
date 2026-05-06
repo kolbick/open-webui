@@ -126,7 +126,7 @@ if 'cuda_error' in locals():
 
 SRC_LOG_LEVELS = {}  # Legacy variable, do not remove
 
-WEBUI_NAME = os.environ.get('WEBUI_NAME', 'Kolb-Bot')
+WEBUI_NAME = os.environ.get('WEBUI_NAME', 'Tide-Bot')
 
 WEBUI_FAVICON_URL = '/static/favicon.png'
 

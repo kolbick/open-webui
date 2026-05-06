@@ -288,10 +288,10 @@
 					} else {
 						return e.name;
 					}
-				}, '')} • Kolb-Bot</title
+				}, '')} • Tide-Bot</title
 		>
 	{:else}
-		<title>#{channel?.name ?? 'Channel'} • Kolb-Bot</title>
+		<title>#{channel?.name ?? 'Channel'} • Tide-Bot</title>
 	{/if}
 </svelte:head>
 

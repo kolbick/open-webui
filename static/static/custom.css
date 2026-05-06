@@ -1,5 +1,5 @@
 /* ================================================================
-   KOLB-BOT — AI Pirate Assistant
+   TIDE-BOT — AI Pirate Assistant
    Atmosphere: a captain's quarters at dusk. Candlelight on gold leaf,
    weathered amethyst velvet, a 17th-century Oxford type-case. No slop.
    ================================================================ */
@@ -11,22 +11,22 @@
    ---------------------------------------------------------------- */
 :root {
   /* Gold accents */
-  --kb-gold:        #c9980a;
-  --kb-gold-warm:   #d4a51c;
-  --kb-gold-pale:   #e8c66b;
-  --kb-gold-deep:   #8b6508;
-  --kb-gold-glow:   rgba(232, 198, 107, 0.45);
+  --tb-gold:        #c9980a;
+  --tb-gold-warm:   #d4a51c;
+  --tb-gold-pale:   #e8c66b;
+  --tb-gold-deep:   #8b6508;
+  --tb-gold-glow:   rgba(232, 198, 107, 0.45);
 
   /* Purple/amethyst */
-  --kb-plum:        #7c3aed;
-  --kb-plum-deep:   #4c1d95;
-  --kb-amethyst:    #a78bfa;
+  --tb-plum:        #7c3aed;
+  --tb-plum-deep:   #4c1d95;
+  --tb-amethyst:    #a78bfa;
 
   /* Pirate neutrals */
-  --kb-ink:         #1a1230;    /* ink / darkest purple-black */
-  --kb-velvet:      #241845;    /* rich dark purple velvet */
-  --kb-ember:       #8b2635;    /* danger / destructive crimson */
-  --kb-vellum:      #f6efdc;    /* warm aged paper (accent only) */
+  --tb-ink:         #1a1230;    /* ink / darkest purple-black */
+  --tb-velvet:      #241845;    /* rich dark purple velvet */
+  --tb-ember:       #8b2635;    /* danger / destructive crimson */
+  --tb-vellum:      #f6efdc;    /* warm aged paper (accent only) */
 }
 
 /* Dark mode — ship's cabin at midnight, lit by a brass lantern */
@@ -163,12 +163,12 @@ pre *, code * {
 .dark button[aria-selected="true"],
 .dark [role="tab"][aria-selected="true"],
 .dark .active {
-  color: var(--kb-gold-warm) !important;
+  color: var(--tb-gold-warm) !important;
 }
 .light button[aria-selected="true"],
 .light [role="tab"][aria-selected="true"],
 :root:not(.dark) button[aria-selected="true"] {
-  color: var(--kb-plum-deep) !important;
+  color: var(--tb-plum-deep) !important;
   font-weight: 500;
 }
 
@@ -222,7 +222,7 @@ body::before {
   border: 1px solid rgba(201, 152, 10, 0.08);
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--kb-gold), var(--kb-gold-deep));
+  background: linear-gradient(180deg, var(--tb-gold), var(--tb-gold-deep));
 }
 
 .light ::-webkit-scrollbar,
@@ -236,7 +236,7 @@ body::before {
 }
 .light ::-webkit-scrollbar-thumb:hover,
 :root:not(.dark) ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--kb-gold-warm), var(--kb-gold-deep));
+  background: linear-gradient(180deg, var(--tb-gold-warm), var(--tb-gold-deep));
 }
 
 /* ----------------------------------------------------------------
@@ -256,9 +256,9 @@ body::before {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--kb-plum) 25%,
-    var(--kb-gold) 50%,
-    var(--kb-plum) 75%,
+    var(--tb-plum) 25%,
+    var(--tb-gold) 50%,
+    var(--tb-plum) 75%,
     transparent 100%
   );
   opacity: 0.7;
@@ -281,9 +281,9 @@ body::before {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--kb-plum) 25%,
-    var(--kb-gold) 50%,
-    var(--kb-plum) 75%,
+    var(--tb-plum) 25%,
+    var(--tb-gold) 50%,
+    var(--tb-plum) 75%,
     transparent 100%
   );
   opacity: 0.6;
@@ -301,7 +301,7 @@ nav img[src*="splash"] {
                   drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6)) !important;
 }
 
-/* Square Kolb-Bot badge — always rounded, always with gold ring */
+/* Square Tide-Bot badge — always rounded, always with gold ring */
 nav img[src*="/static/favicon"],
 nav img[src*="favicon.png"] {
   border-radius: 0.85rem !important;
@@ -322,7 +322,7 @@ nav img[src*="favicon.png"] {
     rgba(124, 58, 237, 0.10) 60%,
     transparent 100%
   ) !important;
-  border-left: 2px solid var(--kb-gold) !important;
+  border-left: 2px solid var(--tb-gold) !important;
   border-radius: 0 6px 6px 0 !important;
   box-shadow: inset 0 0 12px rgba(201, 152, 10, 0.08);
 }
@@ -337,7 +337,7 @@ nav img[src*="favicon.png"] {
     rgba(124, 58, 237, 0.12) 60%,
     transparent 100%
   ) !important;
-  border-left: 2px solid var(--kb-gold) !important;
+  border-left: 2px solid var(--tb-gold) !important;
   border-radius: 0 6px 6px 0 !important;
 }
 
@@ -392,7 +392,7 @@ nav img[src*="favicon.png"] {
 }
 .light textarea:focus,
 :root:not(.dark) textarea:focus {
-  border-color: var(--kb-plum) !important;
+  border-color: var(--tb-plum) !important;
   box-shadow:
     0 0 0 1px rgba(124, 58, 237, 0.25),
     0 0 20px -4px rgba(124, 58, 237, 0.25) !important;
@@ -408,9 +408,9 @@ nav img[src*="favicon.png"] {
   background: linear-gradient(
     135deg,
     #e8c66b 0%,
-    var(--kb-gold-warm) 45%,
-    var(--kb-gold) 70%,
-    var(--kb-gold-deep) 100%
+    var(--tb-gold-warm) 45%,
+    var(--tb-gold) 70%,
+    var(--tb-gold-deep) 100%
   ) !important;
   color: #1a1230 !important;
   border: 1px solid rgba(232, 198, 107, 0.45) !important;
@@ -443,8 +443,8 @@ nav img[src*="favicon.png"] {
   background: linear-gradient(
     135deg,
     #8b5cf6 0%,
-    var(--kb-plum) 50%,
-    var(--kb-plum-deep) 100%
+    var(--tb-plum) 50%,
+    var(--tb-plum-deep) 100%
   ) !important;
   color: #fff !important;
   border: 1px solid rgba(167, 139, 250, 0.4) !important;
@@ -466,7 +466,7 @@ nav img[src*="favicon.png"] {
    12. Chat messages — illuminated manuscript treatment
    ----------------------------------------------------------------
    Assistant block gets a gold-rule on the left and an illuminated
-   first-letter (Kolb-Bot speaks in a captain's voice).            */
+   first-letter (Tide-Bot speaks in a captain's voice).            */
 
 .dark [id^="message-"],
 .light [id^="message-"],
@@ -501,7 +501,7 @@ nav img[src*="favicon.png"] {
   padding: 0.12em 0.12em 0 0;
   margin-right: 0.05em;
   float: left;
-  color: var(--kb-gold);
+  color: var(--tb-gold);
   text-shadow:
     0 0 8px rgba(201, 152, 10, 0.4),
     0 1px 0 rgba(0, 0, 0, 0.3);
@@ -561,13 +561,13 @@ nav img[src*="favicon.png"] {
 :root:not(.dark) pre {
   background-color: #f0e8ff !important;
   border: 1px solid rgba(97, 73, 176, 0.22) !important;
-  border-left: 2px solid var(--kb-plum) !important;
+  border-left: 2px solid var(--tb-plum) !important;
 }
 .light code,
 :root:not(.dark) code {
   background-color: rgba(201, 152, 10, 0.08) !important;
   border: 1px solid rgba(201, 152, 10, 0.2) !important;
-  color: var(--kb-gold-deep) !important;
+  color: var(--tb-gold-deep) !important;
   padding: 0.1em 0.35em;
   border-radius: 3px;
 }
@@ -593,12 +593,12 @@ hr {
 /* ----------------------------------------------------------------
    16. Links & selection
    ---------------------------------------------------------------- */
-.dark a:not([class*="button"]):not([class*="btn"]) { color: var(--kb-gold-warm); }
-.dark a:hover:not([class*="button"]):not([class*="btn"]) { color: var(--kb-gold-pale); }
+.dark a:not([class*="button"]):not([class*="btn"]) { color: var(--tb-gold-warm); }
+.dark a:hover:not([class*="button"]):not([class*="btn"]) { color: var(--tb-gold-pale); }
 .light a:not([class*="button"]):not([class*="btn"]),
-:root:not(.dark) a:not([class*="button"]):not([class*="btn"]) { color: var(--kb-plum); }
+:root:not(.dark) a:not([class*="button"]):not([class*="btn"]) { color: var(--tb-plum); }
 .light a:hover:not([class*="button"]):not([class*="btn"]),
-:root:not(.dark) a:hover:not([class*="button"]):not([class*="btn"]) { color: var(--kb-plum-deep); }
+:root:not(.dark) a:hover:not([class*="button"]):not([class*="btn"]) { color: var(--tb-plum-deep); }
 
 .dark ::selection { background: rgba(201, 152, 10, 0.35); color: #fff8e7; }
 .light ::selection,
@@ -609,13 +609,13 @@ hr {
    ---------------------------------------------------------------- */
 .dark input:focus:not([type="checkbox"]):not([type="radio"]) {
   outline: none !important;
-  border-color: var(--kb-gold) !important;
+  border-color: var(--tb-gold) !important;
   box-shadow: 0 0 0 2px rgba(201, 152, 10, 0.25) !important;
 }
 .light input:focus:not([type="checkbox"]):not([type="radio"]),
 :root:not(.dark) input:focus:not([type="checkbox"]):not([type="radio"]) {
   outline: none !important;
-  border-color: var(--kb-plum) !important;
+  border-color: var(--tb-plum) !important;
   box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.2) !important;
 }
 
@@ -624,8 +624,8 @@ hr {
    ---------------------------------------------------------------- */
 .dark button[aria-label*="scroll" i],
 .dark button[aria-label*="bottom" i] {
-  background: radial-gradient(circle at 30% 30%, #e8c66b, var(--kb-gold) 55%, var(--kb-gold-deep) 100%) !important;
-  color: var(--kb-ink) !important;
+  background: radial-gradient(circle at 30% 30%, #e8c66b, var(--tb-gold) 55%, var(--tb-gold-deep) 100%) !important;
+  color: var(--tb-ink) !important;
   border: 1px solid rgba(232, 198, 107, 0.55) !important;
   box-shadow: 0 4px 18px rgba(201, 152, 10, 0.4) !important;
 }
@@ -636,7 +636,7 @@ hr {
 html.dark #splash-screen { background: #060410 !important; }
 html:not(.dark) #splash-screen { background: #f5eeff !important; }
 #progress-bar {
-  background: linear-gradient(90deg, var(--kb-plum), var(--kb-gold-warm)) !important;
+  background: linear-gradient(90deg, var(--tb-plum), var(--tb-gold-warm)) !important;
 }
 html.dark #logo {
   filter: drop-shadow(0 0 24px rgba(201, 152, 10, 0.55))
@@ -702,9 +702,9 @@ html:not(.dark) #logo {
 .tippy-box .tippy-arrow { color: #1c163d !important; }
 
 /* ----------------------------------------------------------------
-   23. Avatars — gold ring on Kolb-Bot
+   23. Avatars — gold ring on Tide-Bot
    ---------------------------------------------------------------- */
-.dark [alt*="Kolb" i],
+.dark [alt*="Tide" i],
 .dark img[alt*="assistant" i] {
   box-shadow:
     0 0 0 1.5px rgba(201, 152, 10, 0.55),
@@ -718,7 +718,7 @@ html:not(.dark) #logo {
 .dark [class*="hover:bg-gray-50"]:hover,
 .dark [class*="hover:bg-white"]:hover {
   background-color: rgba(201, 152, 10, 0.10) !important;
-  color: var(--kb-gold-warm) !important;
+  color: var(--tb-gold-warm) !important;
 }
 
 .light [class*="hover:bg-gray-100"]:hover,

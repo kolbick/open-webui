@@ -77,7 +77,7 @@
 							$i18n.t('Your data stays yours'),
 							$i18n.t('No cloud required'),
 							$i18n.t('Built for you'),
-							$i18n.t('Powered by Kolb-Bot')
+							$i18n.t('Powered by Tide-Bot')
 						]}
 					/>
 

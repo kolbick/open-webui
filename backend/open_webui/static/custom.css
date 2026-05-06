@@ -1,5 +1,5 @@
 /* ============================================================
-   Kolb-Bot Theme — AI Pirate / Purple & Gold
+   Tide-Bot Theme — AI Pirate / Purple & Gold
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
@@ -8,11 +8,11 @@
    CSS Variables
    ---------------------------------------------------------- */
 :root {
-  --kb-gold: #c9980a;
-  --kb-gold-light: #e8b931;
-  --kb-gold-dim: #b8860b;
-  --kb-purple: #7c3aed;
-  --kb-purple-light: #a78bfa;
+  --tb-gold: #c9980a;
+  --tb-gold-light: #e8b931;
+  --tb-gold-dim: #b8860b;
+  --tb-purple: #7c3aed;
+  --tb-purple-light: #a78bfa;
 }
 
 /* ----------------------------------------------------------
@@ -103,7 +103,7 @@
 }
 
 /* ----------------------------------------------------------
-   Sidebar brand name — Cinzel font for Kolb-Bot header
+   Sidebar brand name — Cinzel font for Tide-Bot header
    ---------------------------------------------------------- */
 .dark .sidebar [class*="font-primary"],
 .light .sidebar [class*="font-primary"],
@@ -303,7 +303,7 @@ html:not(.dark) #splash-screen { background: #f5f2ff !important; }
 :root:not(.dark) body { background-color: #f5f2ff !important; }
 
 /* ==========================================================
-   KOLB-BOT DISTINCTIVE TREATMENTS
+   TIDE-BOT DISTINCTIVE TREATMENTS
    ========================================================== */
 
 /* Kill the Tailwind `dark:invert` that ruins the color pirate
@@ -353,7 +353,7 @@ nav .font-primary,
 }
 
 /* -----------------------------------------------------------
-   Chat messages — distinctive Kolb-Bot treatment
+   Chat messages — distinctive Tide-Bot treatment
    -----------------------------------------------------------
    Assistant bubble gets a subtle gold left rule + parchment
    tint. User bubble gets a purple accent rule on the right. */
@@ -390,7 +390,7 @@ nav .font-primary,
 }
 
 /* -----------------------------------------------------------
-   Buttons — Kolb-Bot stamp treatment
+   Buttons — Tide-Bot stamp treatment
    ----------------------------------------------------------- */
 .dark button[type="submit"]:not(:disabled),
 .dark .btn-primary,
@@ -495,10 +495,10 @@ hr {
 }
 
 /* -----------------------------------------------------------
-   Name badge / avatars — gold ring on Kolb-Bot assistant
+   Name badge / avatars — gold ring on Tide-Bot assistant
    ----------------------------------------------------------- */
-.dark [alt*="Kolb"],
-.dark [alt*="kolb"],
+.dark [alt*="Tide"],
+.dark [alt*="tide"],
 .dark img[alt*="assistant"] {
   box-shadow: 0 0 0 1.5px rgba(201, 152, 10, 0.55),
               0 0 12px rgba(201, 152, 10, 0.35) !important;

@@ -254,7 +254,7 @@
 						href="https://github.com/open-webui/open-webui/blob/main/docs/CONTRIBUTING.md#-translations-and-internationalization"
 						target="_blank"
 					>
-						Help us translate Kolb-Bot!
+						Help us translate Tide-Bot!
 					</a>
 				</div>
 			{/if}

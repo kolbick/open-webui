@@ -42,7 +42,7 @@ def search_yandex(
 ) -> List[SearchResult]:
     try:
         headers = {
-            'User-Agent': 'Kolb-Bot RAG Bot',
+            'User-Agent': 'Tide-Bot RAG Bot',
             'Authorization': f'Api-Key {yandex_search_api_key}',
         }
 
