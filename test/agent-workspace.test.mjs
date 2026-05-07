@@ -8,6 +8,7 @@ const browserShellPath = resolve(process.cwd(), 'src/lib/components/chat/AgentBr
 const chatPath = resolve(process.cwd(), 'src/lib/components/chat/Chat.svelte');
 const artifactPath = resolve(process.cwd(), 'src/lib/components/chat/Messages/BrowserArtifact.svelte');
 const browserArtifactsPath = resolve(process.cwd(), 'src/lib/utils/browserArtifacts.ts');
+const chatsRouterPath = resolve(process.cwd(), 'backend/open_webui/routers/chats.py');
 
 test('agent workspace component exposes browser, steps, and terminal tabs', () => {
 	assert.equal(existsSync(workspacePath), true, 'AgentWorkspace.svelte should exist');
@@ -59,10 +60,12 @@ test('agent browser shell gives the noVNC iframe a polished Agent Mode surface',
 	assert.match(source, /src={browserUrl}/);
 	assert.match(source, /Agent Browser/);
 	assert.match(source, /traffic-light/);
+	assert.match(source, /beach-backdrop/);
+	assert.match(source, /shoreline/);
 	assert.match(source, /status-pill/);
-	assert.match(source, /Pause/);
-	assert.match(source, /Take Over/);
-	assert.match(source, /Resume/);
+	assert.match(source, /aria-label="Pause agent"/);
+	assert.match(source, /aria-label="Take over browser"/);
+	assert.match(source, /aria-label="Resume agent"/);
 });
 
 test('agent browser shell controls call real workspace callbacks when provided', () => {
@@ -73,6 +76,9 @@ test('agent browser shell controls call real workspace callbacks when provided',
 	assert.match(source, /export let onPause/);
 	assert.match(source, /export let onTakeOver/);
 	assert.match(source, /export let onResume/);
+	assert.match(source, /handleTrafficRed/);
+	assert.match(source, /handleTrafficYellow/);
+	assert.match(source, /handleTrafficGreen/);
 	assert.match(source, /await onPause\(\)/);
 	assert.match(source, /await onTakeOver\(\)/);
 	assert.match(source, /await onResume\(\)/);
@@ -81,6 +87,15 @@ test('agent browser shell controls call real workspace callbacks when provided',
 	assert.match(workspaceSource, /onResume={onResume}/);
 	assert.match(chatSource, /onPause={async \(\) => stopResponse\(false\)}/);
 	assert.match(chatSource, /onTakeOver={async \(\) => stopResponse\(false\)}/);
+});
+
+test('shared chat endpoint allows public shares without requiring a login first', () => {
+	const source = readFileSync(chatsRouterPath, 'utf8');
+
+	assert.match(source, /get_optional_verified_user/);
+	assert.doesNotMatch(source, /share_id: str,\s*user=Depends\(get_verified_user\)/);
+	assert.match(source, /AccessGrants\.has_access\(\s*user_id=['"]\*['"]/);
+	assert.match(source, /if not user:/);
 });
 
 test('agent browser shell shows live status, approval, and action feed affordances', () => {
