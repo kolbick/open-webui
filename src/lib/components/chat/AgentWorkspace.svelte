@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { Pane, PaneResizer } from 'paneforge';
 	import { onMount, tick } from 'svelte';
-	import ArrowsPointingOut from '$lib/components/icons/ArrowsPointingOut.svelte';
 	import Computer from '$lib/components/icons/Computer.svelte';
-	import Link from '$lib/components/icons/Link.svelte';
-	import Refresh from '$lib/components/icons/Refresh.svelte';
 	import Terminal from '$lib/components/icons/Terminal.svelte';
 	import XMark from '$lib/components/icons/XMark.svelte';
+	import AgentBrowserShell from './AgentBrowserShell.svelte';
 	import XTerminal from './XTerminal.svelte';
 
 	export let open = false;
@@ -32,8 +30,6 @@
 	const DESKTOP_MAX_SIZE = 72;
 
 	let activeTab: WorkspaceTab = 'browser';
-	let iframeElement: HTMLIFrameElement | null = null;
-	let reloadKey = 0;
 	let terminalConnected = false;
 	let terminalConnecting = false;
 	let paneReady = false;
@@ -47,14 +43,6 @@
 			: terminalId
 				? 'Ready'
 				: 'No terminal';
-
-	const reloadBrowser = () => {
-		reloadKey += 1;
-	};
-
-	const openFullscreen = () => {
-		iframeElement?.requestFullscreen?.();
-	};
 
 	const clampWorkspaceSize = (size: number) =>
 		Math.min(DESKTOP_MAX_SIZE, Math.max(DESKTOP_MIN_SIZE, size));
@@ -178,60 +166,8 @@
 
 			<div class="min-h-0 flex-1 p-2.5">
 				{#if activeTab === 'browser'}
-					<div
-						class="workspace-frame flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-gray-950 shadow-[0_18px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/15"
-					>
-						<div class="flex h-10 shrink-0 items-center gap-2 border-b border-white/10 bg-gray-900/95 px-3 text-gray-300">
-							<div class="flex shrink-0 gap-1.5">
-								<span class="size-2.5 rounded-full bg-red-400/90"></span>
-								<span class="size-2.5 rounded-full bg-yellow-400/90"></span>
-								<span class="size-2.5 rounded-full bg-emerald-400/90"></span>
-							</div>
-
-							<div class="min-w-0 flex-1 truncate rounded-full bg-white/10 px-3 py-1 text-xs text-gray-300">
-								{browserUrl}
-							</div>
-
-							<button
-								type="button"
-								class="rounded-full p-1.5 text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
-								aria-label="Reload browser"
-								title="Reload"
-								on:click={reloadBrowser}
-							>
-								<Refresh className="size-4" />
-							</button>
-							<button
-								type="button"
-								class="rounded-full p-1.5 text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
-								aria-label="Fullscreen browser"
-								title="Fullscreen"
-								on:click={openFullscreen}
-							>
-								<ArrowsPointingOut className="size-4" />
-							</button>
-							<a
-								class="rounded-full p-1.5 text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
-								href={browserUrl}
-								target="_blank"
-								rel="noreferrer"
-								aria-label="Open browser in new tab"
-								title="Open in new tab"
-							>
-								<Link className="size-4" />
-							</a>
-						</div>
-
-						{#key reloadKey}
-							<iframe
-								bind:this={iframeElement}
-								class="h-full min-h-0 w-full flex-1 border-0 bg-black"
-								src={browserUrl}
-								title="Live browser"
-								sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"
-								allow="clipboard-read; clipboard-write; fullscreen"
-							/>
-						{/key}
+					<div class="workspace-frame h-full min-h-0">
+						<AgentBrowserShell {browserUrl} {statusEntries} />
 					</div>
 				{:else if activeTab === 'steps'}
 					<div
@@ -396,60 +332,8 @@
 
 				<div class="min-h-0 flex-1 p-3">
 					{#if activeTab === 'browser'}
-						<div
-							class="workspace-frame flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-gray-950 shadow-[0_18px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/15"
-						>
-							<div class="flex h-10 shrink-0 items-center gap-2 border-b border-white/10 bg-gray-900/95 px-3 text-gray-300">
-								<div class="flex shrink-0 gap-1.5">
-									<span class="size-2.5 rounded-full bg-red-400/90"></span>
-									<span class="size-2.5 rounded-full bg-yellow-400/90"></span>
-									<span class="size-2.5 rounded-full bg-emerald-400/90"></span>
-								</div>
-
-								<div class="min-w-0 flex-1 truncate rounded-full bg-white/10 px-3 py-1 text-xs text-gray-300">
-									{browserUrl}
-								</div>
-
-								<button
-									type="button"
-									class="rounded-full p-1.5 text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
-									aria-label="Reload browser"
-									title="Reload"
-									on:click={reloadBrowser}
-								>
-									<Refresh className="size-4" />
-								</button>
-								<button
-									type="button"
-									class="rounded-full p-1.5 text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
-									aria-label="Fullscreen browser"
-									title="Fullscreen"
-									on:click={openFullscreen}
-								>
-									<ArrowsPointingOut className="size-4" />
-								</button>
-								<a
-									class="rounded-full p-1.5 text-gray-400 transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
-									href={browserUrl}
-									target="_blank"
-									rel="noreferrer"
-									aria-label="Open browser in new tab"
-									title="Open in new tab"
-								>
-									<Link className="size-4" />
-								</a>
-							</div>
-
-							{#key reloadKey}
-								<iframe
-									bind:this={iframeElement}
-									class="h-full min-h-0 w-full flex-1 border-0 bg-black"
-									src={browserUrl}
-									title="Live browser"
-									sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"
-									allow="clipboard-read; clipboard-write; fullscreen"
-								/>
-							{/key}
+						<div class="workspace-frame h-full min-h-0">
+							<AgentBrowserShell {browserUrl} {statusEntries} />
 						</div>
 					{:else if activeTab === 'steps'}
 						<div
