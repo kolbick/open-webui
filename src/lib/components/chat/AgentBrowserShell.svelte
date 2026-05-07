@@ -77,6 +77,18 @@
 		await onResume();
 	};
 
+	const handleTrafficRed = async () => {
+		await pauseAgent();
+	};
+
+	const handleTrafficYellow = async () => {
+		await takeOver();
+	};
+
+	const handleTrafficGreen = async () => {
+		await resumeAgent();
+	};
+
 	const getStatusOverlayLabel = () => {
 		if (browserFailed) return 'Disconnected';
 		if (!browserLoaded) return 'Connecting';
@@ -115,27 +127,46 @@
 </script>
 
 <div
-	class="agent-browser-shell flex h-full min-h-0 flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#070b12]/95 text-white shadow-[0_28px_90px_rgba(2,6,23,0.42)] ring-1 ring-black/30 backdrop-blur-xl {controlMode ===
+	class="agent-browser-shell relative isolate flex h-full min-h-0 flex-col overflow-hidden rounded-[1.35rem] border border-white/20 bg-[#0d3a46]/90 text-white shadow-[0_28px_90px_rgba(8,48,60,0.34)] ring-1 ring-white/10 backdrop-blur-xl {controlMode ===
 	'user'
-		? 'ring-2 ring-cyan-300/50'
+		? 'ring-2 ring-cyan-200/70'
 		: controlMode === 'paused'
-			? 'ring-2 ring-amber-300/40'
+			? 'ring-2 ring-amber-200/70'
 			: screenshotActive
 				? 'screenshot-glow'
 				: ''}"
 >
+	<div class="beach-backdrop pointer-events-none absolute inset-0 -z-10"></div>
 	<div
-		class="flex min-h-14 shrink-0 items-center gap-3 border-b border-white/10 bg-white/[0.055] px-3.5 backdrop-blur-xl"
+		class="flex min-h-14 shrink-0 items-center gap-3 border-b border-white/20 bg-white/[0.12] px-3.5 backdrop-blur-xl"
 	>
-		<div class="traffic-light flex shrink-0 items-center gap-1.5" aria-hidden="true">
-			<span class="size-3 rounded-full bg-[#ff5f57] shadow-[0_0_14px_rgba(255,95,87,0.35)]"></span>
-			<span class="size-3 rounded-full bg-[#febc2e] shadow-[0_0_14px_rgba(254,188,46,0.28)]"></span>
-			<span class="size-3 rounded-full bg-[#28c840] shadow-[0_0_14px_rgba(40,200,64,0.28)]"></span>
+		<div class="traffic-light flex shrink-0 items-center gap-1.5">
+			<button
+				type="button"
+				class="size-3 rounded-full bg-[#ff5f57] shadow-[0_0_14px_rgba(255,95,87,0.35)] transition hover:scale-110 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/45 active:scale-95"
+				aria-label="Pause agent"
+				title="Pause agent"
+				on:click={handleTrafficRed}
+			></button>
+			<button
+				type="button"
+				class="size-3 rounded-full bg-[#febc2e] shadow-[0_0_14px_rgba(254,188,46,0.28)] transition hover:scale-110 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/45 active:scale-95"
+				aria-label="Take over browser"
+				title="Take over browser"
+				on:click={handleTrafficYellow}
+			></button>
+			<button
+				type="button"
+				class="size-3 rounded-full bg-[#28c840] shadow-[0_0_14px_rgba(40,200,64,0.28)] transition hover:scale-110 hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-white/45 active:scale-95"
+				aria-label="Resume agent"
+				title="Resume agent"
+				on:click={handleTrafficGreen}
+			></button>
 		</div>
 
 		<div class="flex min-w-0 flex-1 justify-center">
 			<div
-				class="status-pill flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 text-xs text-gray-200 shadow-inner shadow-black/30 backdrop-blur"
+				class="status-pill flex max-w-full items-center gap-2 rounded-full border border-white/25 bg-[#093242]/45 px-3 py-1.5 text-xs text-white shadow-inner shadow-white/5 backdrop-blur"
 			>
 				<span
 					class="size-1.5 shrink-0 rounded-full {isWorking
@@ -150,50 +181,32 @@
 				></span>
 				<span class="shrink-0 font-medium">Agent Browser</span>
 				<span class="hidden h-3 w-px bg-white/15 sm:block"></span>
-				<span class="truncate text-gray-400">{statusOverlayLabel}</span>
+				<span class="truncate text-cyan-50/70">{statusOverlayLabel}</span>
 			</div>
 		</div>
 
 		{#if showAgentControls}
-			<div class="flex shrink-0 items-center gap-1.5">
-				<button
-					type="button"
-					class="rounded-full border border-white/10 px-2.5 py-1.5 text-xs font-medium text-gray-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white active:scale-95"
-					on:click={pauseAgent}
-				>
-					Pause
-				</button>
-				<button
-					type="button"
-					class="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/20 active:scale-95"
-					on:click={takeOver}
-				>
-					Take Over
-				</button>
-				<button
-					type="button"
-					class="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-2.5 py-1.5 text-xs font-medium text-emerald-100 transition hover:bg-emerald-300/20 active:scale-95"
-					on:click={resumeAgent}
-				>
-					Resume
-				</button>
+			<div class="hidden shrink-0 rounded-full border border-white/15 bg-white/10 px-2.5 py-1.5 text-xs font-medium text-cyan-50/80 sm:block">
+				{controlMode === 'user' ? 'User control' : controlMode === 'paused' ? 'Paused' : 'Agent control'}
 			</div>
 		{/if}
 	</div>
 
-	<div class="relative min-h-0 flex-1 overflow-hidden bg-black">
+	<div class="relative min-h-0 flex-1 overflow-hidden bg-[linear-gradient(145deg,rgba(236,250,248,0.96),rgba(158,219,219,0.88)_48%,rgba(237,202,134,0.8))]">
+		<div class="shoreline pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 opacity-60 blur-2xl"></div>
+
 		{#if !browserLoaded && !browserFailed}
-			<div class="absolute inset-0 z-20 bg-gray-950">
-				<div class="h-full w-full animate-pulse bg-[linear-gradient(110deg,rgba(15,23,42,0.9),rgba(30,41,59,0.72),rgba(15,23,42,0.9))]"></div>
-				<div class="absolute left-5 top-5 h-3 w-40 rounded-full bg-white/10"></div>
-				<div class="absolute left-5 top-12 h-3 w-64 rounded-full bg-white/5"></div>
-				<div class="absolute bottom-5 left-5 h-14 w-64 rounded-2xl bg-white/[0.08]"></div>
+			<div class="absolute inset-0 z-20 bg-[linear-gradient(140deg,rgba(211,244,242,0.96),rgba(64,166,180,0.82)_52%,rgba(232,200,139,0.76))]">
+				<div class="h-full w-full animate-pulse bg-[linear-gradient(110deg,rgba(255,255,255,0.12),rgba(255,255,255,0.34),rgba(255,255,255,0.1))]"></div>
+				<div class="absolute left-5 top-5 h-3 w-40 rounded-full bg-white/45"></div>
+				<div class="absolute left-5 top-12 h-3 w-64 rounded-full bg-white/25"></div>
+				<div class="absolute bottom-5 left-5 h-14 w-64 rounded-2xl bg-[#063846]/35 backdrop-blur"></div>
 			</div>
 		{/if}
 
 		{#if browserFailed}
-			<div class="absolute inset-0 z-30 flex items-center justify-center bg-gray-950/95 p-6 text-center">
-				<div class="max-w-sm rounded-3xl border border-red-300/20 bg-red-950/20 p-5 shadow-2xl backdrop-blur">
+			<div class="absolute inset-0 z-30 flex items-center justify-center bg-[#082f3b]/80 p-6 text-center backdrop-blur">
+				<div class="max-w-sm rounded-3xl border border-red-200/30 bg-white/15 p-5 shadow-2xl backdrop-blur">
 					<div class="text-sm font-semibold text-red-100">Disconnected</div>
 					<div class="mt-2 text-sm text-red-100/70">The browser view stopped responding.</div>
 					<button
@@ -208,8 +221,8 @@
 		{/if}
 
 		{#if approvalEntry}
-			<div class="absolute inset-0 z-40 flex items-center justify-center bg-gray-950/45 p-5 backdrop-blur-md">
-				<div class="max-w-md rounded-3xl border border-white/15 bg-gray-950/80 p-5 text-center shadow-2xl">
+			<div class="absolute inset-0 z-40 flex items-center justify-center bg-[#073140]/45 p-5 backdrop-blur-md">
+				<div class="max-w-md rounded-3xl border border-white/20 bg-[#073140]/82 p-5 text-center shadow-2xl">
 					<div class="text-base font-semibold">Approval needed</div>
 					<div class="mt-2 text-sm leading-6 text-gray-300">
 						{approvalEntry.description || approvalEntry.action || 'The agent wants to submit this form.'}
@@ -254,7 +267,7 @@
 		{/if}
 
 		<div
-			class="absolute bottom-4 left-4 z-30 max-w-[min(22rem,calc(100%-2rem))] rounded-2xl border border-white/10 bg-gray-950/72 p-3 shadow-2xl backdrop-blur-xl"
+			class="absolute bottom-4 left-4 z-30 max-w-[min(22rem,calc(100%-2rem))] rounded-2xl border border-white/25 bg-[#073140]/72 p-3 shadow-2xl backdrop-blur-xl"
 		>
 			<div class="flex items-center gap-2">
 				<span
@@ -283,7 +296,7 @@
 		{#key reloadKey}
 			<iframe
 				bind:this={iframeElement}
-				class="h-full min-h-0 w-full border-0 bg-black transition duration-300 {controlMode ===
+				class="h-full min-h-0 w-full border-0 bg-[#d9f3ef] transition duration-300 {controlMode ===
 				'user'
 					? 'brightness-110'
 					: controlMode === 'paused'
@@ -305,19 +318,19 @@
 		{/key}
 	</div>
 
-	<div class="border-t border-white/10 bg-white/[0.045] px-3.5 py-2.5">
+	<div class="border-t border-white/15 bg-white/[0.11] px-3.5 py-2.5">
 		<div class="mb-2 flex items-center justify-between">
 			<div class="text-xs font-semibold uppercase tracking-[0.16em] text-gray-400">Live action feed</div>
 			<div class="text-xs text-gray-500">{recentActions.length || 1} recent</div>
 		</div>
 		<div class="grid gap-1.5 sm:grid-cols-2">
 			{#if recentActions.length === 0}
-				<div class="rounded-2xl border border-white/[0.08] bg-white/[0.035] px-3 py-2 text-xs text-gray-400">
+					<div class="rounded-2xl border border-white/[0.16] bg-white/[0.095] px-3 py-2 text-xs text-cyan-50/70">
 					Looking at page
 				</div>
 			{:else}
 				{#each recentActions as entry}
-					<div class="rounded-2xl border border-white/[0.08] bg-white/[0.035] px-3 py-2 transition hover:bg-white/[0.06]">
+					<div class="rounded-2xl border border-white/[0.16] bg-white/[0.095] px-3 py-2 transition hover:bg-white/[0.14]">
 						<div class="truncate text-xs font-medium text-gray-200">{labelForAction(entry)}</div>
 						{#if entry.description}
 							<div class="mt-0.5 truncate text-xs text-gray-500">{entry.description}</div>
@@ -328,7 +341,7 @@
 		</div>
 	</div>
 
-	<div class="flex min-h-11 shrink-0 items-center gap-2 border-t border-white/10 bg-black/20 px-3.5 py-2 text-gray-400">
+	<div class="flex min-h-11 shrink-0 items-center gap-2 border-t border-white/15 bg-[#063342]/32 px-3.5 py-2 text-cyan-50/70">
 		<button
 			type="button"
 			class="rounded-full p-1.5 transition hover:bg-white/10 hover:text-white active:scale-95"
@@ -366,6 +379,29 @@
 <style>
 	.agent-browser-shell {
 		animation: agent-browser-enter 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.beach-backdrop {
+		background:
+			radial-gradient(circle at 18% 8%, rgba(255, 239, 187, 0.44), transparent 24%),
+			linear-gradient(135deg, rgba(7, 68, 82, 0.96) 0%, rgba(20, 124, 134, 0.82) 48%, rgba(228, 193, 126, 0.82) 100%);
+	}
+
+	.beach-backdrop::after {
+		position: absolute;
+		inset: auto -12% 0 -12%;
+		height: 36%;
+		content: '';
+		background:
+			radial-gradient(ellipse at 25% 10%, rgba(255, 255, 255, 0.36), transparent 34%),
+			linear-gradient(178deg, rgba(246, 252, 246, 0.58), rgba(231, 199, 138, 0.26) 42%, rgba(132, 105, 66, 0.16));
+		filter: blur(18px);
+		opacity: 0.85;
+		transform: rotate(-1deg);
+	}
+
+	.shoreline {
+		background: linear-gradient(90deg, rgba(255, 255, 255, 0.32), rgba(112, 215, 218, 0.18), rgba(236, 202, 139, 0.22));
 	}
 
 	.screenshot-glow {
