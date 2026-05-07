@@ -1,5 +1,5 @@
 export const DEFAULT_BROWSER_ARTIFACT_URL =
-	'/browser/vnc.html?autoconnect=1&resize=remote&path=browser/websockify#password=zL6qUhJBCVoqS9w44Goo3qjW';
+	'/browser/vnc.html?autoconnect=1&resize=scale&reconnect=1&reconnect_delay=1000&path=browser/websockify#password=zL6qUhJBCVoqS9w44Goo3qjW';
 
 export type BrowserArtifactFile = {
 	type?: string;
