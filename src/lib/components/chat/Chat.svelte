@@ -3164,6 +3164,11 @@
 					terminalId={$selectedTerminalId}
 					chatId={$chatId}
 					onClose={() => (agentWorkspaceOpen = false)}
+					onPause={async () => stopResponse(false)}
+					onTakeOver={async () => stopResponse(false)}
+					onResume={async () => {
+						agentWorkspaceOpen = true;
+					}}
 				/>
 
 				<ChatControls

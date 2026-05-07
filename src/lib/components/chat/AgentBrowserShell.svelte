@@ -14,6 +14,10 @@
 	};
 
 	export let statusEntries: StatusEntry[] = [];
+	export let showAgentControls = true;
+	export let onPause: () => void | Promise<void> = async () => {};
+	export let onTakeOver: () => void | Promise<void> = async () => {};
+	export let onResume: () => void | Promise<void> = async () => {};
 
 	type ControlMode = 'agent' | 'user' | 'paused';
 
@@ -56,18 +60,21 @@
 		iframeElement?.requestFullscreen?.();
 	};
 
-	const takeOver = () => {
+	const takeOver = async () => {
 		controlMode = 'user';
 		approvalDismissed = true;
+		await onTakeOver();
 	};
 
-	const pauseAgent = () => {
+	const pauseAgent = async () => {
 		controlMode = 'paused';
+		await onPause();
 	};
 
-	const resumeAgent = () => {
+	const resumeAgent = async () => {
 		controlMode = 'agent';
 		approvalDismissed = false;
+		await onResume();
 	};
 
 	const getStatusOverlayLabel = () => {
@@ -147,29 +154,31 @@
 			</div>
 		</div>
 
-		<div class="flex shrink-0 items-center gap-1.5">
-			<button
-				type="button"
-				class="rounded-full border border-white/10 px-2.5 py-1.5 text-xs font-medium text-gray-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white active:scale-95"
-				on:click={pauseAgent}
-			>
-				Pause
-			</button>
-			<button
-				type="button"
-				class="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/20 active:scale-95"
-				on:click={takeOver}
-			>
-				Take Over
-			</button>
-			<button
-				type="button"
-				class="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-2.5 py-1.5 text-xs font-medium text-emerald-100 transition hover:bg-emerald-300/20 active:scale-95"
-				on:click={resumeAgent}
-			>
-				Resume
-			</button>
-		</div>
+		{#if showAgentControls}
+			<div class="flex shrink-0 items-center gap-1.5">
+				<button
+					type="button"
+					class="rounded-full border border-white/10 px-2.5 py-1.5 text-xs font-medium text-gray-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white active:scale-95"
+					on:click={pauseAgent}
+				>
+					Pause
+				</button>
+				<button
+					type="button"
+					class="rounded-full border border-cyan-300/25 bg-cyan-300/10 px-2.5 py-1.5 text-xs font-medium text-cyan-100 transition hover:bg-cyan-300/20 active:scale-95"
+					on:click={takeOver}
+				>
+					Take Over
+				</button>
+				<button
+					type="button"
+					class="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-2.5 py-1.5 text-xs font-medium text-emerald-100 transition hover:bg-emerald-300/20 active:scale-95"
+					on:click={resumeAgent}
+				>
+					Resume
+				</button>
+			</div>
+		{/if}
 	</div>
 
 	<div class="relative min-h-0 flex-1 overflow-hidden bg-black">
@@ -220,13 +229,15 @@
 						>
 							Reject
 						</button>
-						<button
-							type="button"
-							class="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-medium text-cyan-100 transition hover:bg-cyan-300/20"
-							on:click={takeOver}
-						>
-							Take Over
-						</button>
+						{#if showAgentControls}
+							<button
+								type="button"
+								class="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-medium text-cyan-100 transition hover:bg-cyan-300/20"
+								on:click={takeOver}
+							>
+								Take Over
+							</button>
+						{/if}
 					</div>
 				</div>
 			</div>

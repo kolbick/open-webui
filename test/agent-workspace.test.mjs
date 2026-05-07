@@ -65,6 +65,24 @@ test('agent browser shell gives the noVNC iframe a polished Agent Mode surface',
 	assert.match(source, /Resume/);
 });
 
+test('agent browser shell controls call real workspace callbacks when provided', () => {
+	const source = readFileSync(browserShellPath, 'utf8');
+	const workspaceSource = readFileSync(workspacePath, 'utf8');
+	const chatSource = readFileSync(chatPath, 'utf8');
+
+	assert.match(source, /export let onPause/);
+	assert.match(source, /export let onTakeOver/);
+	assert.match(source, /export let onResume/);
+	assert.match(source, /await onPause\(\)/);
+	assert.match(source, /await onTakeOver\(\)/);
+	assert.match(source, /await onResume\(\)/);
+	assert.match(workspaceSource, /onPause={onPause}/);
+	assert.match(workspaceSource, /onTakeOver={onTakeOver}/);
+	assert.match(workspaceSource, /onResume={onResume}/);
+	assert.match(chatSource, /onPause={async \(\) => stopResponse\(false\)}/);
+	assert.match(chatSource, /onTakeOver={async \(\) => stopResponse\(false\)}/);
+});
+
 test('agent browser shell shows live status, approval, and action feed affordances', () => {
 	const source = readFileSync(browserShellPath, 'utf8');
 
@@ -129,8 +147,12 @@ test('browser agent opens the workspace without auto-inserting the old inline ar
 
 test('inline browser artifact keeps fullscreen and external-open fallback controls', () => {
 	const source = readFileSync(artifactPath, 'utf8');
+	const browserShellSource = readFileSync(browserShellPath, 'utf8');
 
-	assert.match(source, /requestFullscreen/);
+	assert.match(source, /import AgentBrowserShell from '..\/AgentBrowserShell\.svelte';/);
+	assert.match(source, /<AgentBrowserShell/);
+	assert.match(source, /showAgentControls={false}/);
+	assert.match(browserShellSource, /requestFullscreen/);
 	assert.match(source, /target="_blank"/);
 	assert.match(source, /getBrowserArtifactUrl/);
 });
