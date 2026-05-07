@@ -21,6 +21,9 @@
 	export let terminalId: string | null = null;
 	export let chatId: string | null = null;
 	export let onClose: () => void = () => {};
+	export let onPause: () => void | Promise<void> = async () => {};
+	export let onTakeOver: () => void | Promise<void> = async () => {};
+	export let onResume: () => void | Promise<void> = async () => {};
 	export let pane: Pane | null = null;
 
 	type WorkspaceTab = 'browser' | 'steps' | 'terminal';
@@ -167,7 +170,7 @@
 			<div class="min-h-0 flex-1 p-2.5">
 				{#if activeTab === 'browser'}
 					<div class="workspace-frame h-full min-h-0">
-						<AgentBrowserShell {browserUrl} {statusEntries} />
+						<AgentBrowserShell {browserUrl} {statusEntries} onPause={onPause} onTakeOver={onTakeOver} onResume={onResume} />
 					</div>
 				{:else if activeTab === 'steps'}
 					<div
@@ -333,7 +336,7 @@
 				<div class="min-h-0 flex-1 p-3">
 					{#if activeTab === 'browser'}
 						<div class="workspace-frame h-full min-h-0">
-							<AgentBrowserShell {browserUrl} {statusEntries} />
+							<AgentBrowserShell {browserUrl} {statusEntries} onPause={onPause} onTakeOver={onTakeOver} onResume={onResume} />
 						</div>
 					{:else if activeTab === 'steps'}
 						<div
