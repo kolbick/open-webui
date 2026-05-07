@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Pane, PaneResizer } from 'paneforge';
+	import { onMount, tick } from 'svelte';
 	import ArrowsPointingOut from '$lib/components/icons/ArrowsPointingOut.svelte';
 	import Computer from '$lib/components/icons/Computer.svelte';
 	import Link from '$lib/components/icons/Link.svelte';
@@ -22,14 +23,21 @@
 	export let terminalId: string | null = null;
 	export let chatId: string | null = null;
 	export let onClose: () => void = () => {};
+	export let pane: Pane | null = null;
 
 	type WorkspaceTab = 'browser' | 'steps' | 'terminal';
+
+	const DESKTOP_DEFAULT_SIZE = 58;
+	const DESKTOP_MIN_SIZE = 38;
+	const DESKTOP_MAX_SIZE = 72;
 
 	let activeTab: WorkspaceTab = 'browser';
 	let iframeElement: HTMLIFrameElement | null = null;
 	let reloadKey = 0;
 	let terminalConnected = false;
 	let terminalConnecting = false;
+	let paneReady = false;
+	let openResizeQueued = false;
 
 	$: visibleStatusEntries = statusEntries.filter((entry) => !entry?.hidden);
 	$: terminalStateLabel = terminalConnected
@@ -48,18 +56,76 @@
 		iframeElement?.requestFullscreen?.();
 	};
 
+	const clampWorkspaceSize = (size: number) =>
+		Math.min(DESKTOP_MAX_SIZE, Math.max(DESKTOP_MIN_SIZE, size));
+
+	const getSavedWorkspaceSize = () => {
+		if (typeof localStorage === 'undefined') {
+			return DESKTOP_DEFAULT_SIZE;
+		}
+
+		const savedSize = Number(localStorage.agentWorkspaceSize);
+		return Number.isFinite(savedSize) ? clampWorkspaceSize(savedSize) : DESKTOP_DEFAULT_SIZE;
+	};
+
+	export const openPane = async () => {
+		await tick();
+
+		if (!pane || mobile) {
+			return;
+		}
+
+		const savedSize = getSavedWorkspaceSize();
+		if (savedSize === DESKTOP_DEFAULT_SIZE) {
+			pane.resize(DESKTOP_DEFAULT_SIZE);
+			return;
+		}
+
+		pane.resize(savedSize);
+	};
+
+	const handlePaneResize = (size: number) => {
+		if (!paneReady || !open || mobile || typeof localStorage === 'undefined') {
+			return;
+		}
+
+		localStorage.agentWorkspaceSize = `${Math.round(clampWorkspaceSize(size))}`;
+	};
+
 	const tabs: Array<{ id: WorkspaceTab; label: string }> = [
 		{ id: 'browser', label: 'Browser' },
 		{ id: 'steps', label: 'Steps' },
 		{ id: 'terminal', label: 'Terminal' }
 	];
+
+	onMount(() => {
+		paneReady = true;
+
+		return () => {
+			paneReady = false;
+		};
+	});
+
+	$: if (open && !mobile && pane && !openResizeQueued) {
+		openResizeQueued = true;
+		openPane().finally(() => {
+			setTimeout(() => {
+				openResizeQueued = false;
+			}, 0);
+		});
+	}
+
+	$: if (!open) {
+		openResizeQueued = false;
+	}
 </script>
 
 {#if open}
 	{#if mobile}
 		<div
-			class="fixed inset-0 z-50 flex flex-col bg-gray-50/95 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.18)] backdrop-blur dark:bg-gray-950/95 dark:text-gray-100"
+			class="workspace-panel fixed inset-0 z-50 flex flex-col bg-gray-50/95 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.18)] backdrop-blur transition-all duration-500 ease-out dark:bg-gray-950/95 dark:text-gray-100"
 		>
+			<div class="workspace-glow pointer-events-none absolute inset-x-8 top-0 h-px"></div>
 			<div
 				class="flex h-14 shrink-0 items-center justify-between border-b border-black/5 bg-white/85 px-3 backdrop-blur dark:border-white/10 dark:bg-gray-950/80"
 			>
@@ -113,7 +179,7 @@
 			<div class="min-h-0 flex-1 p-2.5">
 				{#if activeTab === 'browser'}
 					<div
-						class="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-gray-950 shadow-[0_18px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/15"
+						class="workspace-frame flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-gray-950 shadow-[0_18px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/15"
 					>
 						<div class="flex h-10 shrink-0 items-center gap-2 border-b border-white/10 bg-gray-900/95 px-3 text-gray-300">
 							<div class="flex shrink-0 gap-1.5">
@@ -263,11 +329,14 @@
 		</PaneResizer>
 
 		<Pane
-			defaultSize={44}
-			minSize={30}
-			class="z-10 hidden h-full min-h-0 border-l border-black/5 bg-gray-50/90 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.18)] backdrop-blur dark:border-white/10 dark:bg-gray-950/90 dark:text-gray-100 md:flex"
+			bind:pane
+			defaultSize={DESKTOP_DEFAULT_SIZE}
+			minSize={DESKTOP_MIN_SIZE}
+			onResize={handlePaneResize}
+			class="workspace-panel z-10 hidden h-full min-h-0 border-l border-black/5 bg-gray-50/90 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.18)] backdrop-blur transition-all duration-500 ease-out dark:border-white/10 dark:bg-gray-950/90 dark:text-gray-100 md:flex"
 		>
-			<div class="flex h-full min-h-0 w-full flex-col">
+			<div class="relative flex h-full min-h-0 w-full flex-col overflow-hidden">
+				<div class="workspace-glow pointer-events-none absolute inset-x-8 top-0 h-px"></div>
 				<div
 					class="flex h-14 shrink-0 items-center justify-between border-b border-black/5 bg-white/80 px-3 backdrop-blur dark:border-white/10 dark:bg-gray-950/70"
 				>
@@ -328,7 +397,7 @@
 				<div class="min-h-0 flex-1 p-3">
 					{#if activeTab === 'browser'}
 						<div
-							class="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-gray-950 shadow-[0_18px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/15"
+							class="workspace-frame flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-gray-950 shadow-[0_18px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/15"
 						>
 							<div class="flex h-10 shrink-0 items-center gap-2 border-b border-white/10 bg-gray-900/95 px-3 text-gray-300">
 								<div class="flex shrink-0 gap-1.5">
@@ -473,3 +542,59 @@
 		</Pane>
 	{/if}
 {/if}
+
+<style>
+	.workspace-panel {
+		animation: workspace-enter 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.workspace-glow {
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(34, 211, 238, 0.7),
+			rgba(16, 185, 129, 0.55),
+			transparent
+		);
+		animation: workspace-glow 2.8s ease-in-out infinite;
+	}
+
+	.workspace-frame {
+		transform-origin: center;
+		animation: workspace-frame-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	@keyframes workspace-enter {
+		from {
+			opacity: 0;
+			transform: translateX(22px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes workspace-frame-in {
+		from {
+			opacity: 0;
+			transform: translateY(10px) scale(0.985);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	@keyframes workspace-glow {
+		0%,
+		100% {
+			opacity: 0.45;
+			transform: translateX(-16%);
+		}
+		50% {
+			opacity: 1;
+			transform: translateX(16%);
+		}
+	}
+</style>

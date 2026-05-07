@@ -6,6 +6,7 @@ import test from 'node:test';
 const workspacePath = resolve(process.cwd(), 'src/lib/components/chat/AgentWorkspace.svelte');
 const chatPath = resolve(process.cwd(), 'src/lib/components/chat/Chat.svelte');
 const artifactPath = resolve(process.cwd(), 'src/lib/components/chat/Messages/BrowserArtifact.svelte');
+const browserArtifactsPath = resolve(process.cwd(), 'src/lib/utils/browserArtifacts.ts');
 
 test('agent workspace component exposes browser, steps, and terminal tabs', () => {
 	assert.equal(existsSync(workspacePath), true, 'AgentWorkspace.svelte should exist');
@@ -37,10 +38,13 @@ test('agent workspace uses smoother animated panel treatments', () => {
 	const source = readFileSync(workspacePath, 'utf8');
 
 	assert.match(source, /transition-all/);
-	assert.match(source, /duration-200/);
+	assert.match(source, /duration-500/);
 	assert.match(source, /backdrop-blur/);
 	assert.match(source, /animate-pulse/);
 	assert.match(source, /shadow-\[0_18px_60px/);
+	assert.match(source, /workspace-panel/);
+	assert.match(source, /workspace-glow/);
+	assert.match(source, /workspace-frame/);
 });
 
 test('desktop agent workspace is not hidden behind container-query-only classes', () => {
@@ -48,6 +52,25 @@ test('desktop agent workspace is not hidden behind container-query-only classes'
 
 	assert.doesNotMatch(source, /@3xl:flex/);
 	assert.match(source, /md:flex/);
+});
+
+test('desktop agent workspace opens wide and remembers local resize', () => {
+	const source = readFileSync(workspacePath, 'utf8');
+
+	assert.match(source, /const DESKTOP_DEFAULT_SIZE = 58;/);
+	assert.match(source, /bind:pane/);
+	assert.match(source, /export const openPane = async \(\) => {/);
+	assert.match(source, /localStorage\.agentWorkspaceSize/);
+	assert.match(source, /pane\.resize\(DESKTOP_DEFAULT_SIZE\)/);
+});
+
+test('browser artifact URL defaults to local scaling and reconnection', () => {
+	const source = readFileSync(browserArtifactsPath, 'utf8');
+
+	assert.match(source, /resize=scale/);
+	assert.match(source, /reconnect=1/);
+	assert.match(source, /reconnect_delay=1000/);
+	assert.doesNotMatch(source, /resize=remote/);
 });
 
 test('chat mounts the dockable agent workspace and uses the shared browser URL helper', () => {
