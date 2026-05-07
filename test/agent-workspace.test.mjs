@@ -43,6 +43,13 @@ test('agent workspace uses smoother animated panel treatments', () => {
 	assert.match(source, /shadow-\[0_18px_60px/);
 });
 
+test('desktop agent workspace is not hidden behind container-query-only classes', () => {
+	const source = readFileSync(workspacePath, 'utf8');
+
+	assert.doesNotMatch(source, /@3xl:flex/);
+	assert.match(source, /md:flex/);
+});
+
 test('chat mounts the dockable agent workspace and uses the shared browser URL helper', () => {
 	const source = readFileSync(chatPath, 'utf8');
 
@@ -51,6 +58,14 @@ test('chat mounts the dockable agent workspace and uses the shared browser URL h
 	assert.match(source, /agentWorkspaceOpen/);
 	assert.match(source, /<AgentWorkspace/);
 	assert.match(source, /chatId={\$chatId}/);
+});
+
+test('browser agent opens the workspace without auto-inserting the old inline artifact', () => {
+	const source = readFileSync(chatPath, 'utf8');
+
+	assert.match(source, /const showBrowserArtifactHandler = async \(\) => {/);
+	assert.match(source, /if \(browserAgentEnabled\(\)\)/);
+	assert.doesNotMatch(source, /await appendBrowserArtifactMessage\(userMessageId\);/);
 });
 
 test('inline browser artifact keeps fullscreen and external-open fallback controls', () => {

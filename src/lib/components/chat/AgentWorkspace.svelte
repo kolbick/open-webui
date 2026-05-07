@@ -257,7 +257,7 @@
 		</div>
 	{:else}
 		<PaneResizer
-			class="relative z-20 hidden items-center justify-center border-l border-transparent transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-700 @3xl:flex"
+			class="relative z-20 hidden items-center justify-center border-l border-transparent transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-700 md:flex"
 		>
 			<div class="absolute -left-1.5 -right-1.5 bottom-0 top-0 cursor-col-resize bg-transparent" />
 		</PaneResizer>
@@ -265,7 +265,7 @@
 		<Pane
 			defaultSize={44}
 			minSize={30}
-			class="z-10 hidden h-full min-h-0 border-l border-black/5 bg-gray-50/90 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.18)] backdrop-blur dark:border-white/10 dark:bg-gray-950/90 dark:text-gray-100 @3xl:flex"
+			class="z-10 hidden h-full min-h-0 border-l border-black/5 bg-gray-50/90 text-gray-900 shadow-[0_18px_60px_rgba(15,23,42,0.18)] backdrop-blur dark:border-white/10 dark:bg-gray-950/90 dark:text-gray-100 md:flex"
 		>
 			<div class="flex h-full min-h-0 w-full flex-col">
 				<div
