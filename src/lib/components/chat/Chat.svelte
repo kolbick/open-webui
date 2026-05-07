@@ -1703,6 +1703,12 @@
 
 	const showBrowserArtifactHandler = async () => {
 		agentWorkspaceOpen = true;
+
+		if (browserAgentEnabled()) {
+			await tick();
+			return;
+		}
+
 		const messages = createMessagesList(history, history.currentId);
 		const parentMessage = messages.length !== 0 ? messages.at(-1) : null;
 		const messageId = await appendBrowserArtifactMessage(parentMessage ? parentMessage.id : null);
@@ -1931,14 +1937,6 @@
 		history.currentId = userMessageId;
 
 		openAgentWorkspace();
-
-		if (browserAgentEnabled() && !hasBrowserArtifactMessage()) {
-			agentWorkspaceOpen = true;
-			await appendBrowserArtifactMessage(userMessageId);
-			history.currentId = userMessageId;
-			await tick();
-			await scrollToBottom('smooth');
-		}
 
 		// focus on chat input (skip during voice call to avoid triggering mobile keyboard)
 		if (!$showCallOverlay) {
