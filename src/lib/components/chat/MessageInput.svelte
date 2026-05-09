@@ -101,7 +101,6 @@
 	import Expand from '../icons/Expand.svelte';
 	import QueuedMessageItem from './MessageInput/QueuedMessageItem.svelte';
 	import TaskList from './Messages/ResponseMessage/TaskList.svelte';
-	import { openAgentWebUi } from '$lib/utils/agentWebUi';
 
 	const i18n = getContext('i18n');
 
@@ -1730,13 +1729,14 @@
 									{/if}
 
 									<div class="ml-1 flex gap-1.5">
-										<Tooltip content={$i18n.t('Open Agent')} placement="top">
+										<Tooltip content={$i18n.t('Show browser')} placement="top">
 											<button
-												id="open-agent-webui-button"
+												id="show-browser-artifact-button"
 												type="button"
 												class="bg-transparent hover:bg-gray-100 text-gray-700 dark:text-white dark:hover:bg-gray-800 rounded-full size-8 flex justify-center items-center outline-hidden focus:outline-hidden"
-												aria-label={$i18n.t('Open Agent')}
-												on:click={openAgentWebUi}
+												on:click={() => {
+													dispatch('showBrowserArtifact');
+												}}
 											>
 												<Computer className="size-4.5" strokeWidth="1.5" />
 											</button>
