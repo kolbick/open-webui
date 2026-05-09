@@ -231,9 +231,6 @@
 					placeholder={$i18n.t('How can I help you today?')}
 					{onChange}
 					{onUpload}
-					on:showBrowserArtifact={() => {
-						dispatch('showBrowserArtifact');
-					}}
 					on:submit={(e) => {
 						dispatch('submit', e.detail);
 					}}
