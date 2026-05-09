@@ -63,8 +63,11 @@
 	import RegenerateMenu from './ResponseMessage/RegenerateMenu.svelte';
 	import StatusHistory from './ResponseMessage/StatusHistory.svelte';
 	import FullHeightIframe from '$lib/components/common/FullHeightIframe.svelte';
-	import BrowserArtifact from './BrowserArtifact.svelte';
-	import { getBrowserArtifacts, isBrowserArtifact } from '$lib/utils/browserArtifacts';
+
+	const isRetiredBrowserArtifact = (file: Record<string, any>) =>
+		file?.type === 'browser' ||
+		(file?.type === 'artifact' &&
+			(file?.artifact_type === 'browser' || file?.artifactType === 'browser'));
 
 	interface MessageType {
 		id: string;
@@ -667,20 +670,12 @@
 							<StatusHistory statusHistory={message?.statusHistory} />
 						{/if}
 
-						{#if getBrowserArtifacts(message?.files ?? []).length > 0}
-							<div class="my-1 w-full" dir={$settings?.chatDirection ?? 'auto'}>
-								{#each getBrowserArtifacts(message.files ?? []) as file}
-									<BrowserArtifact {file} />
-								{/each}
-							</div>
-						{/if}
-
 						{#if message?.files && message.files?.filter((f) => f.type === 'image').length > 0}
 							<div
 								class="my-1 w-full flex overflow-x-auto gap-2 flex-wrap"
 								dir={$settings?.chatDirection ?? 'auto'}
 							>
-								{#each message.files.filter((file) => !isBrowserArtifact(file)) as file}
+								{#each message.files.filter((file) => !isRetiredBrowserArtifact(file)) as file}
 									<div>
 										{#if file.type === 'image' || (file?.content_type ?? '').startsWith('image/')}
 											<Image src={file.url} alt={message.content} />
