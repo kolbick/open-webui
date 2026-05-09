@@ -61,6 +61,9 @@ test('agent browser shell gives the noVNC iframe a polished Agent Mode surface',
 	assert.match(source, /Agent Browser/);
 	assert.match(source, /traffic-light/);
 	assert.match(source, /beach-backdrop/);
+	assert.match(source, /agent-computer-window/);
+	assert.match(source, /agent-viewport-live/);
+	assert.match(source, /browser-focus-ring/);
 	assert.match(source, /agent-stage-light/);
 	assert.match(source, /shoreline/);
 	assert.match(source, /browser-display/);
@@ -115,6 +118,10 @@ test('agent browser shell shows live status, approval, and action feed affordanc
 	assert.match(source, /activity-orbit/);
 	assert.match(source, /mode-ribbon/);
 	assert.match(source, /command-rail/);
+	assert.match(source, /agent-command-center/);
+	assert.match(source, /agent-handoff-dock/);
+	assert.match(source, /agent-thinking-waves/);
+	assert.match(source, /approval-scrim/);
 	assert.match(source, /controlModeClass/);
 	assert.match(source, /screenshot-glow/);
 	assert.match(source, /Connecting/);
