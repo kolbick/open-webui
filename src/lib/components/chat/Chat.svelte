@@ -66,6 +66,11 @@
 		displayFileHandler
 	} from '$lib/utils';
 	import { AudioQueue } from '$lib/utils/audio';
+	import {
+		createBrowserArtifactFile,
+		getBrowserArtifacts,
+		getDefaultBrowserArtifactUrl
+	} from '$lib/utils/browserArtifacts';
 
 	import {
 		archiveChatById,
@@ -100,6 +105,7 @@
 	import Messages from '$lib/components/chat/Messages.svelte';
 	import Navbar from '$lib/components/chat/Navbar.svelte';
 	import ChatControls from './ChatControls.svelte';
+	import AgentWorkspace from './AgentWorkspace.svelte';
 	import EventConfirmDialog from '../common/ConfirmDialog.svelte';
 	import Placeholder from './Placeholder.svelte';
 	import FilesOverlay from './MessageInput/FilesOverlay.svelte';
@@ -147,6 +153,10 @@
 	let selectedToolIds = [];
 	let selectedFilterIds = [];
 	let pendingOAuthTools = [];
+	const BROWSER_AGENT_TOOL_ID = 'server:mcp:playwright-browser-automation';
+	const BROWSER_AGENT_SYSTEM_PROMPT =
+		'Agent mode is enabled. You have access to a visible Playwright browser. Use the browser tools for web navigation, inspection, form filling, and multi-step browser work. Explain what you are doing as you work, ask before sensitive actions, and keep the live browser state useful for the user to watch or take over.';
+	let agentWorkspaceOpen = false;
 
 	let imageGenerationEnabled = false;
 	let webSearchEnabled = false;
@@ -166,6 +176,50 @@
 	let history = {
 		messages: {},
 		currentId: null
+	};
+
+	let activeMessage = null;
+	let activeStatusEntries = [];
+	$: activeMessage = history?.currentId ? history.messages?.[history.currentId] : null;
+	$: activeStatusEntries =
+		activeMessage?.statusHistory ?? [...(activeMessage?.status ? [activeMessage.status] : [])];
+
+	const browserAgentEnabled = () => selectedToolIds.includes(BROWSER_AGENT_TOOL_ID);
+	const openAgentWorkspace = () => {
+		if (browserAgentEnabled()) {
+			agentWorkspaceOpen = true;
+		}
+	};
+	const hasBrowserArtifactMessage = () =>
+		Object.values(history?.messages ?? {}).some(
+			(message: any) => getBrowserArtifacts(message?.files ?? []).length > 0
+		);
+
+	const appendBrowserArtifactMessage = async (parentId = history?.currentId ?? null) => {
+		const messageId = uuidv4();
+		const modelId = atSelectedModel?.id ?? selectedModels?.at(0) ?? '';
+		const model = $models.find((m) => m.id === modelId);
+
+		const browserMessage = {
+			id: messageId,
+			parentId,
+			childrenIds: [],
+			role: 'assistant',
+			content: '',
+			files: [createBrowserArtifactFile()],
+			done: true,
+			model: model?.id ?? modelId,
+			modelName: model?.name ?? model?.id ?? 'Browser',
+			modelIdx: 0,
+			timestamp: Math.floor(Date.now() / 1000)
+		};
+
+		if (parentId && history.messages[parentId]) {
+			history.messages[parentId].childrenIds.push(messageId);
+		}
+
+		history.messages[messageId] = browserMessage;
+		return messageId;
 	};
 
 	let taskIds = null;
@@ -1647,6 +1701,29 @@
 		}
 	};
 
+	const showBrowserArtifactHandler = async () => {
+		agentWorkspaceOpen = true;
+
+		if (browserAgentEnabled()) {
+			await tick();
+			return;
+		}
+
+		const messages = createMessagesList(history, history.currentId);
+		const parentMessage = messages.length !== 0 ? messages.at(-1) : null;
+		const messageId = await appendBrowserArtifactMessage(parentMessage ? parentMessage.id : null);
+		history.currentId = messageId;
+
+		await tick();
+		await scrollToBottom('smooth');
+
+		if (messages.length === 0) {
+			await initChatHandler(history);
+		} else {
+			await saveChatHandler($chatId, history);
+		}
+	};
+
 	const chatCompletionEventHandler = async (data, message, chatId) => {
 		const { id, done, choices, content, output, sources, selected_model_id, error, usage } = data;
 
@@ -1858,6 +1935,8 @@
 		}
 
 		history.currentId = userMessageId;
+
+		openAgentWorkspace();
 
 		// focus on chat input (skip during voice call to avoid triggering mobile keyboard)
 		if (!$showCallOverlay) {
@@ -2199,10 +2278,13 @@
 			true;
 		// Always include system prompt — backend extracts it and prepends to DB messages.
 		// Only temp chats need conversation messages (persisted chats load from DB).
-		const activeSystemPrompt = params?.system ?? $settings?.system ?? '';
-		let messages = [activeSystemPrompt ? { role: 'system', content: activeSystemPrompt } : undefined].filter(
-			Boolean
-		);
+		const baseSystemPrompt = params?.system ?? $settings?.system ?? '';
+		const activeSystemPrompt = [baseSystemPrompt, browserAgentEnabled() ? BROWSER_AGENT_SYSTEM_PROMPT : '']
+			.filter((part) => part?.trim())
+			.join('\n\n');
+		let messages = [
+			activeSystemPrompt ? { role: 'system', content: activeSystemPrompt } : undefined
+		].filter(Boolean);
 		if ($temporaryChatEnabled) {
 			messages = [
 				...messages,
@@ -2938,7 +3020,20 @@
 							</div>
 
 							<div class=" pb-2 {dragged ? 'z-0' : 'z-10'}">
-							<MessageInput
+								{#if browserAgentEnabled() && !agentWorkspaceOpen}
+									<div class="mx-auto mb-2 flex w-full max-w-3xl px-2">
+										<button
+											type="button"
+											class="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1.5 text-xs font-medium text-cyan-800 shadow-sm transition hover:bg-cyan-100 dark:border-cyan-900/70 dark:bg-cyan-950/40 dark:text-cyan-200 dark:hover:bg-cyan-950"
+											on:click={() => (agentWorkspaceOpen = true)}
+										>
+											<span class="size-1.5 rounded-full bg-emerald-500"></span>
+											Agent workspace
+										</button>
+									</div>
+								{/if}
+
+								<MessageInput
 									bind:this={messageInput}
 									{history}
 									{taskIds}
@@ -2997,12 +3092,13 @@
 											[$chatId]: queue.filter((m) => m.id !== id)
 										}));
 									}}
-								onChange={(data) => {
-									if (!$temporaryChatEnabled) {
-										saveDraft(data, $chatId);
-									}
-								}}
-								on:submit={async (e) => {
+									onChange={(data) => {
+										if (!$temporaryChatEnabled) {
+											saveDraft(data, $chatId);
+										}
+									}}
+									on:showBrowserArtifact={showBrowserArtifactHandler}
+									on:submit={async (e) => {
 										clearDraft($chatId);
 										if (e.detail || files.length > 0) {
 											await tick();
@@ -3042,11 +3138,12 @@
 									{onSelect}
 									{onUpload}
 									onChange={(data) => {
-									if (!$temporaryChatEnabled) {
-										saveDraft(data);
-									}
-								}}
-								on:submit={async (e) => {
+										if (!$temporaryChatEnabled) {
+											saveDraft(data);
+										}
+									}}
+									on:showBrowserArtifact={showBrowserArtifactHandler}
+									on:submit={async (e) => {
 										clearDraft();
 										if (e.detail || files.length > 0) {
 											await tick();
@@ -3058,6 +3155,21 @@
 						{/if}
 					</div>
 				</Pane>
+
+				<AgentWorkspace
+					open={agentWorkspaceOpen && browserAgentEnabled()}
+					mobile={$mobile}
+					browserUrl={getDefaultBrowserArtifactUrl()}
+					statusEntries={activeStatusEntries}
+					terminalId={$selectedTerminalId}
+					chatId={$chatId}
+					onClose={() => (agentWorkspaceOpen = false)}
+					onPause={async () => stopResponse(false)}
+					onTakeOver={async () => stopResponse(false)}
+					onResume={async () => {
+						agentWorkspaceOpen = true;
+					}}
+				/>
 
 				<ChatControls
 					bind:this={controlPaneComponent}
