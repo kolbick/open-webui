@@ -1,19 +1,20 @@
-import { describe, expect, it } from 'vitest';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import {
 	createBrowserArtifactFile,
 	getBrowserArtifacts,
 	getDefaultBrowserArtifactUrl,
 	isBrowserArtifact
-} from './browserArtifacts';
+} from './browserArtifacts.ts';
 
 describe('browser artifact files', () => {
 	it('detects explicit browser file entries', () => {
-		expect(isBrowserArtifact({ type: 'browser', url: '/browser/vnc.html' })).toBe(true);
+		assert.equal(isBrowserArtifact({ type: 'browser', url: '/browser/vnc.html' }), true);
 	});
 
 	it('detects artifact file entries marked as browser artifacts', () => {
-		expect(isBrowserArtifact({ type: 'artifact', artifact_type: 'browser' })).toBe(true);
+		assert.equal(isBrowserArtifact({ type: 'artifact', artifact_type: 'browser' }), true);
 	});
 
 	it('filters non-browser files out of mixed message files', () => {
@@ -22,21 +23,22 @@ describe('browser artifact files', () => {
 			{ type: 'browser', url: '/browser/vnc.html' }
 		]);
 
-		expect(artifacts).toEqual([{ type: 'browser', url: '/browser/vnc.html' }]);
+		assert.deepEqual(artifacts, [{ type: 'browser', url: '/browser/vnc.html' }]);
 	});
 
 	it('uses the routed noVNC viewer by default', () => {
-		expect(getDefaultBrowserArtifactUrl()).toBe(
-			'/browser/vnc.html?autoconnect=1&resize=remote&path=browser/websockify#password=zL6qUhJBCVoqS9w44Goo3qjW'
+		assert.equal(
+			getDefaultBrowserArtifactUrl(),
+			'/browser/vnc.html?autoconnect=1&resize=scale&reconnect=1&reconnect_delay=1000&path=browser/websockify#password=zL6qUhJBCVoqS9w44Goo3qjW'
 		);
 	});
 
 	it('creates the browser artifact file used by the chat button', () => {
-		expect(createBrowserArtifactFile()).toEqual({
+		assert.deepEqual(createBrowserArtifactFile(), {
 			type: 'browser',
 			name: 'Live browser',
 			title: 'Live browser',
-			url: '/browser/vnc.html?autoconnect=1&resize=remote&path=browser/websockify#password=zL6qUhJBCVoqS9w44Goo3qjW'
+			url: '/browser/vnc.html?autoconnect=1&resize=scale&reconnect=1&reconnect_delay=1000&path=browser/websockify#password=zL6qUhJBCVoqS9w44Goo3qjW'
 		});
 	});
 });
