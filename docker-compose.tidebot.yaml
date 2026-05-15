@@ -22,6 +22,29 @@ services:
       - open-webui
     restart: unless-stopped
 
+  minimax-image-mcpo:
+    image: ghcr.io/open-webui/mcpo:main
+    container_name: minimax-image-mcpo
+    pull_policy: if_not_present
+    command:
+      [
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--",
+        "uvx",
+        "minimax-coding-plan-mcp",
+        "-y",
+      ]
+    environment:
+      - MINIMAX_API_KEY=${MINIMAX_API_KEY}
+      - MINIMAX_API_HOST=https://api.minimax.io
+      - MINIMAX_MCP_BASE_PATH=/tmp/minimax-mcp
+    networks:
+      - open-webui
+    restart: unless-stopped
+
 volumes:
   tidebot-open-webui: {}
 
