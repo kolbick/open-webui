@@ -27,6 +27,23 @@ The running app container is:
 - Image: `ghcr.io/open-webui/open-webui:kolb-v0.9.5-dev`
 - Persistent DB/config: Docker volume `open-webui_open-webui`, file `/app/backend/data/webui.db`
 
+## Cloudflare
+
+Cloudflare is running as a Windows service named `Cloudflared` from:
+
+`C:\Program Files (x86)\cloudflared\cloudflared.exe`
+
+The active service config is:
+
+`C:\ProgramData\cloudflared\config.yml`
+
+Kolb-Bot ingress routes:
+
+- `kolb-bot.com` and `www.kolb-bot.com` -> `http://localhost:3000`
+- `/browser*` on `kolb-bot.com` and `www.kolb-bot.com` -> `http://localhost:6081`
+
+Do not commit Cloudflare credential JSON files or secrets.
+
 ## Provider/Tool Notes
 
 Open WebUI stores most runtime settings in `/app/backend/data/webui.db`, not only `.env`. When provider/tool settings look wrong, inspect the DB config JSON before changing source.
