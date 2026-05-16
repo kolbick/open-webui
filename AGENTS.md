@@ -27,6 +27,23 @@ The running app container is:
 - Image: `tidebot-open-webui:local`
 - Persistent DB/config: Docker volume `tidebot-webui_tidebot-open-webui`, file `/app/backend/data/webui.db`
 
+## Cloudflare
+
+Cloudflare is running as a Windows service named `Cloudflared` from:
+
+`C:\Program Files (x86)\cloudflared\cloudflared.exe`
+
+The active service config is:
+
+`C:\ProgramData\cloudflared\config.yml`
+
+Tide-Bot ingress routes:
+
+- `tide-bot.com` and `www.tide-bot.com` -> `http://localhost:3001`
+- `/browser*` on `tide-bot.com` and `www.tide-bot.com` -> `http://localhost:6081`
+
+Do not commit Cloudflare credential JSON files or secrets.
+
 ## Provider/Tool Notes
 
 Open WebUI stores most runtime settings in `/app/backend/data/webui.db`, not only `.env`. When provider/tool settings look wrong, inspect the DB config JSON before changing source.
